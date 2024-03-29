@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" title="width=device-width, initial-scale=1.0">
+    <title>React App</title>
+    <link rel="stylesheet" href="index.css"/>
+</head>
+<body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+   
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+    <script>
+        // Define your React component in the global scope
+        function App() {
+            const [items, setItems] = React.useState([
+                { id: 1, title: 'Month 1' },
+                { id: 2, title: 'Onboarding Call' },
+                { id: 3, title: 'Google Search Console Access' },
+                { id: 4, title: 'Website Access' },
+                { id: 5, title: 'Technical Audit.' },
+                { id: 6, title: 'Anchor Tech and Semantic analysis' },
+                { id: 7, title: 'Competitor analysis' },
+                { id: 8, title: 'Anchor Test/Url mapping' },
+                { id: 9, title: 'Google Data Studio Report + Local reporting suit' },
+                { id: 10, title: 'Site level optimization' },
+                { id: 11, title: 'Content creation' },
+                { id: 12, title: 'Content publishing' },
+                { id: 13, title: 'Premius press release' },
+                { id: 14, title: 'Authority Niche placement' },
+                { id: 15, title: 'Review Management' },
+                { id: 16, title: 'Index Links' },
+                { id: 17, title: 'Video Recap' }
+            ]);
+
+            const handleEdit = (id, newValue) => {
+                setItems(items.map(item => item.id === id ? { ...item, title: newValue } : item));
+            };
+
+            const sendDataToAPI = (updatedItem) => {
+                ///this is fake api where i using for testing data
+                fetch('https://jsonplaceholder.typicode.com/posts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(updatedItem),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Data sent successfully:', data);
+                })
+                .catch(error => {
+                    console.error('Error sending data:', error);
+                });
+            };
+
+            return (
+                React.createElement('ul', null,
+                    items.map(item => (
+                        React.createElement('li', {
+                            key: item.id,
+                            className: 'editable',
+                            onClick: () => {
+                                const newValue = prompt('Edit item:', item.title);
+                                if (newValue !== null) {
+                                    handleEdit(item.id, newValue);
+                                    sendDataToAPI({ id: item.id, title: newValue });
+                                }
+                            }
+                        }, item.title)
+                    ))
+                )
+            );
+        }
+
+        // Mount your React component to the 'root' element
+        ReactDOM.render(React.createElement(App), document.getElementById('root'));
+    </script>
+</body>
+</html>
